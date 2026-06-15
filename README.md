@@ -1,170 +1,160 @@
-## Personalized NLP Revision Editor
+Personalized NLP Revision Editor
 
 Author-style NLP revision pipeline for supervised fine-tuning and transformer-based text editing.
 
-## Overview
+Overview
 
-This project is an in-progress natural language processing pipeline designed to model author-specific revision patterns from paired draft and revised text examples. The goal is to build a personalized writing-style revision editor capable of improving fiction prose while preserving voice, tone, emotional intent, and scene-level structure.
+This project is an in-progress NLP editing system designed to revise text for grammar, clarity, flow, and readability while preserving an author's personal writing style. The long-term goal is to build a personalized revision editor that can learn from paired draft/revised examples and use author-specific style context during text editing.
 
-The project focuses on supervised text editing using paired examples of original draft text and revised text. These examples are converted into structured JSONL format for future transformer-based fine-tuning experiments.
+The project currently includes dataset preprocessing, prompt construction, and local Hugging Face inference testing. Future versions will explore retrieval-augmented generation, supervised fine-tuning, and a simple demo interface.
 
-## Project Goals
+Project Goals
+Convert author-specific revision datasets from CSV to JSONL format.
+Build supervised editing examples from paired draft and revised text.
+Create a prompt-based baseline for grammar and style-preserving revision.
+Test local Hugging Face model inference using the Transformers library.
+Add retrieval-augmented generation using a private writing corpus as style context.
+Explore fine-tuning options for transformer-based text revision.
+Package the final editing workflow into a Gradio demo.
+Current Status
 
-* Build a supervised NLP dataset from author-specific draft/revision pairs
-* Convert CSV-based revision datasets into JSONL format for machine learning workflows
-* Preserve author voice while modeling edits related to pacing, dialogue, characterization, emotional beats, and prose clarity
-* Experiment with transformer-based text revision methods
-* Develop a reusable preprocessing pipeline for long-form fiction revision tasks
+Completed:
 
-## Current Status
+Created supervised editing datasets from paragraph- and scene-level revisions.
+Converted CSV datasets into JSONL files for NLP preprocessing.
+Built a prompt-construction baseline using few-shot revision examples.
+Manually tested the baseline prompt using ChatGPT while API access is pending.
+Implemented a local Hugging Face inference smoke test.
+Verified local inference using distilgpt2.
+Tested an instruction-style Hugging Face model with a simple grammar revision example.
 
-This project is currently in progress.
+In progress:
 
-Completed so far:
+Cleaning project structure for GitHub.
+Documenting private-data handling.
+Preparing a Hugging Face-compatible baseline script.
+Planning RAG retrieval using polished writing as style context.
 
-* Created structured supervised learning datasets from long-form fiction revisions
-* Built paragraph-level and scene-level revision pairs
-* Organized examples by revision type, including dialogue, pacing, characterization, emotional beats, prose polish, and scene expansion
-* Implemented CSV-to-JSONL preprocessing scripts
-* Began preparing the project structure for future model training and evaluation
+Planned:
 
-Planned next steps:
-
-* Add dataset validation checks
-* Create train/validation/test splits
-* Build a baseline text editing model
-* Experiment with transformer-based fine-tuning
-* Evaluate model outputs against held-out revision examples
-
-## Repository Structure
-
-```text
+Add train/validation/test splitting.
+Implement retrieval over a private style corpus.
+Test hosted API or Colab-based model generation.
+Explore supervised fine-tuning.
+Create a Gradio interface for demo/testing.
+Repository Structure
 personalized-nlp-revision-editor/
-│
-├── data/
-│   ├── raw/
-│   │   └── README.md
-│   ├── processed/
-│   │   └── README.md
-│
-├── src/
-│   └── convert_csv_to_jsonl.py
-│
-├── notebooks/
-│   └── README.md
-│
-├── outputs/
-│   └── README.md
-│
+├── README.md
 ├── requirements.txt
 ├── .gitignore
-└── README.md
-```
+├── data/
+│   └── README.md
+├── outputs/
+│   └── README.md
+└── src/
+    ├── prepare_dataset.py
+    ├── baseline_editor.py
+    └── baseline_hf.py
+Data
 
-## Dataset
+The dataset used for this project is built from paired writing revisions:
 
-The supervised dataset is built from paired writing revisions:
-
-```text
 original draft text → revised text
-```
 
-Each example includes metadata such as:
+Each example may include:
 
-* revision ID
-* chapter or section number
-* original version
-* revised version
-* revision category
-* word counts
-* similarity score, when available
+revision ID
+chapter or section number
+original version
+revised version
+revision category
+word counts
+similarity score
 
 Example revision categories include:
 
-* dialogue
-* pacing
-* characterization
-* emotional beats
-* prose polish
-* scene expansion
-* structural revision
+grammar correction
+prose polish
+dialogue
+pacing
+characterization
+emotional beats
+scene expansion
+structural revision
 
-Due to copyright and privacy considerations, the full writing dataset is not included in this public repository. The repository focuses on the preprocessing and modeling pipeline.
+The full writing datasets are private and are not included in this public repository. This repository focuses on the preprocessing, prompt construction, and modeling workflow.
 
-## Example JSONL Format
+Baseline Methods
+Baseline 1: Prompt Construction
 
-The processed dataset is intended to use a JSONL structure similar to:
+The first baseline loads JSONL revision examples and formats them into a few-shot editing prompt. The prompt asks the model to revise grammar, clarity, flow, and readability while preserving author voice, tone, rhythm, and scene intent.
 
-```json
-{
-  "id": "example_001",
-  "instruction": "Revise the following fiction passage while preserving the author's voice, tone, and scene intent.",
-  "input": "Original draft text goes here.",
-  "output": "Revised text goes here.",
-  "metadata": {
-    "revision_category": "emotional_beats",
-    "old_word_count": 650,
-    "new_word_count": 720
-  }
-}
-```
+Baseline 2: Manual Model Output Test
 
-## Preprocessing Workflow
+The generated prompt was manually tested through ChatGPT while API billing/access is pending. This allowed the prompt design to be evaluated before connecting it to an automated API workflow.
 
-The preprocessing pipeline is designed to:
+Baseline 3: Hugging Face Local Inference
 
-1. Load CSV files containing paired revision examples
-2. Validate required columns
-3. Handle encoding issues from Excel or Windows-generated CSV files
-4. Convert rows into JSONL format
-5. Preserve long-form text formatting as much as possible
-6. Save processed files for model training
+A local Hugging Face Transformers pipeline was tested to verify that open-source model inference works on the development machine.
 
-## Technologies
+Initial smoke test:
 
-* Python
-* CSV / JSONL preprocessing
-* Natural language processing
-* Supervised fine-tuning dataset preparation
-* Transformer-based text editing workflows
+Input: She walk to the garden and seen the prince.
+Output: She made her way to the garden and saw the prince.
 
-Planned tools and libraries:
+This confirmed that local inference can run successfully, although larger model training will require hosted GPU resources or Google Colab.
 
-* pandas
-* scikit-learn
-* Hugging Face Transformers
-* Hugging Face Datasets
-* PyTorch
+Technologies
+Python
+JSONL preprocessing
+Hugging Face Transformers
+PyTorch
+OpenAI API-compatible prompt workflow
+Local model inference
+Planned: RAG retrieval
+Planned: Gradio demo
+Installation
+pip install -r requirements.txt
 
-## Motivation
+Recommended dependencies:
 
-This project combines my interest in machine learning with my background in long-form fiction writing. Rather than building a generic grammar correction tool, I wanted to explore whether supervised learning can model a specific author’s revision behavior.
+openai
+transformers
+torch
+accelerate
+Usage
+Convert CSV datasets to JSONL
+python src/prepare_dataset.py
+Build a prompt-based editing baseline
+python src/baseline_editor.py
+Run local Hugging Face inference test
+python src/baseline_hf.py
+Hardware Notes
 
-The project is especially focused on edits that are difficult to capture with simple grammar tools, such as:
+This project is being developed on a machine with strong CPU/RAM resources but integrated graphics. Local preprocessing, prompt construction, and small Hugging Face inference tests are supported.
 
-* strengthening emotional tension
-* improving scene pacing
-* preserving character voice
-* refining dialogue rhythm
-* expanding or compressing scene beats
-* maintaining consistency across long-form prose
+Larger model inference, RAG experiments, and fine-tuning will likely be moved to a hosted API, Google Colab, or another GPU-enabled environment.
 
-## Future Work
+Privacy and Data Considerations
 
-Future development will focus on:
+The private writing corpus and full supervised revision datasets are not included in this repository. Public files only include code, documentation, and project structure.
 
-* Training a baseline revision model
-* Comparing different prompt and dataset formats
-* Evaluating model performance on unseen draft passages
-* Adding automated quality checks for revision pairs
-* Creating a small demo interface for testing model outputs
-* Exploring model behavior across different revision categories
+The .gitignore excludes:
 
-## Ethical and Data Considerations
-
-The dataset used for this project contains original creative writing. For that reason, the full dataset is kept private and is not distributed in this repository.
-
-This repository is intended to share the preprocessing, formatting, and modeling workflow without publicly releasing proprietary creative writing data.
+raw CSV files
+processed JSONL files
+private writing corpus files
+generated outputs
+API keys
+virtual environments
+Future Work
+Add dataset validation and summary statistics.
+Build train/validation/test splits.
+Implement retrieval-augmented generation using a private writing corpus.
+Compare prompt-only editing against retrieval-augmented editing.
+Explore supervised fine-tuning in a GPU-enabled environment.
+Build a Gradio demo for interactive text revision.
+Add evaluation examples comparing original passages, baseline outputs, and revised targets.
 
 ## Author
 
